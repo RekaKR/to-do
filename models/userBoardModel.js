@@ -27,10 +27,6 @@ const userBoardSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  title: {
-    type: String,
-    required: true
-  },
   dashboards: {
     type: [dashboardSchema]
   }

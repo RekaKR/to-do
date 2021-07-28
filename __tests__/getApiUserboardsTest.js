@@ -40,6 +40,37 @@ describe('GET - api/userboards tests', () => {
     const res = await request.get('/api/userboards').set("X-USER-ID", "1")
 
     //then
+    const count = await UserBoard.countDocuments()
+    expect(count).toBe(1)
+
+    const userBoardInDB = await UserBoard.findOne()
+
+    expect(userBoardInDB.user_id).toBe("1")
+
+    const _id = userBoardInDB._id
+    expect(_id).toBeDefined()
+
     expect(res.status).toBe(200)
+    expect(res.body).not.toBeNull()
+    expect(res.body.user_id).toBe("1")
+    expect(res.body._id).toBe(_id.toString())
+  })
+
+  it("should not recreate userboards", async () => {
+    //given
+    await request.get('/api/userboards').set("X-USER-ID", "1")
+    const userBoardInDB = await UserBoard.findOne()
+    const id = userBoardInDB._id
+
+    //when
+    const res = await request.get('/api/userboards').set("X-USER-ID", "1")
+
+    //then
+    const count = await UserBoard.countDocuments()
+    expect(count).toBe(1)
+
+    const userBoardInDB2 = await UserBoard.findOne()
+    const id2 = userBoardInDB2._id
+    expect(id).toEqual(id2)
   })
 })
